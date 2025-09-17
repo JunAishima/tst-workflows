@@ -1,0 +1,32 @@
+name: prefect-docker-pixi-tiled
+prefect-version: 3.6.0
+
+build: null
+
+push: null
+
+pull:
+  - prefect.deployments.steps.git_clone:
+      repository: https://github.com/nsls2/tst-workflows.git
+      branch: main
+
+deployments:
+  - name: tst-end-of-run-workflow-docker
+    version: null
+    description: Deploy the updated Docker image
+    entrypoint: end_of_run_workflow.py:end_of_run_workflow
+    parameters: {}
+    schedule: {}
+    work_pool:
+      job_variables:
+        env:
+          TILED_SITE_PROFILES: /nsls2/software/etc/tiled/profiles
+          TILED_API_KEY: "{{ prefect.blocks.secret.tiled-tst-api-key }}"
+        image: ghcr.io/nsls2/tst-workflows:main
+        network_mode: slirp4netns
+        userns: "keep-id:uid=402974,gid=402974"  # workflow-tst:workflow-tst
+        volumes:
+          - /nsls2/data/tst/proposals:/nsls2/data/tst/proposals
+          - /nsls2/software/etc/tiled:/nsls2/software/etc/tiled
+        auto_remove: true
+      name: tst-work-pool-docker
