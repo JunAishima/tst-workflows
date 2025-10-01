@@ -12,7 +12,7 @@ pull:
 
 deployments:
   - name: tst-end-of-run-workflow-docker
-    version: null
+    version: 0.1.0
     description: Deploy the updated Docker image
     entrypoint: end_of_run_workflow.py:end_of_run_workflow
     parameters: {}
@@ -21,7 +21,6 @@ deployments:
       job_variables:
         env:
           TILED_SITE_PROFILES: /nsls2/software/etc/tiled/profiles
-          TILED_API_KEY: "{{ prefect.blocks.secret.tiled-tst-api-key }}"
         image: ghcr.io/nsls2/tst-workflows:main
         network_mode: slirp4netns
         userns: "keep-id:uid=402974,gid=402974"  # workflow-tst:workflow-tst
