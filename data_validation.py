@@ -8,7 +8,7 @@ import os
 @task(retries=2, retry_delay_seconds=10)
 def read_all_streams(uid, beamline_acronym):
     logger = get_run_logger()
-    run = get_tiled_client()[beamline_acronym]["raw"][uid]
+    run = get_tiled_client()[uid]
     logger.info(f"Validating uid {run.start['uid']}")
     start_time = ttime.monotonic()
     for stream in run:
