@@ -10,6 +10,7 @@ def read_all_streams(uid, beamline_acronym):
     api_key = Secret.load("tiled-tst-api-key")
     os.environ["TILED_API_KEY"] = api_key.get()
     tiled_client = from_profile("nsls2")
+    os.environ.pop("TILED_API_KEY")
     run = tiled_client[beamline_acronym]["raw"][uid]
     logger.info(f"Validating uid {run.start['uid']}")
     start_time = ttime.monotonic()
