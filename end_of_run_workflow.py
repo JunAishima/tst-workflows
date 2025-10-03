@@ -13,7 +13,7 @@ def log_completion():
 @flow
 def end_of_run_workflow(stop_doc):
     uid = stop_doc["run_start"]
-    hello_world()
+    # hello_world()
     data_validation(uid, return_state=True)
     # long_flow(iterations=100, sleep_length=10)
     log_completion()
