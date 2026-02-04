@@ -2,7 +2,7 @@ from prefect import task, flow, get_run_logger
 from prefect.blocks.system import Secret
 import time as ttime
 from tiled.client import from_profile
-import os
+
 
 @task(retries=2, retry_delay_seconds=10)
 def read_all_streams(uid, beamline_acronym):

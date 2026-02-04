@@ -1,4 +1,3 @@
-import os
 import traceback
 
 from prefect import flow, task, get_run_logger
@@ -26,9 +25,7 @@ def slack(func):
             return result
         except Exception as e:
             tb = traceback.format_exception_only(e)
-            slack_webhook.notify(
-                f":bangbang: Flow-run failed. (*{flow_run_name}*)"
-            )
+            slack_webhook.notify(f":bangbang: Flow-run failed. (*{flow_run_name}*)")
             raise
 
     return wrapper
@@ -41,7 +38,7 @@ def hello_world():
     logger.info("Starting flow")
     print_task()
     test_dict = dict()
-    #test_dict["key"]  # Trying to create a key error here.
+    # test_dict["key"]  # Trying to create a key error here.
 
 
 if __name__ == "__main__":

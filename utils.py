@@ -3,7 +3,8 @@ from prefect.blocks.system import Secret
 
 import os
 
-LOCATION="tst"
+LOCATION = "tst"
+
 
 def get_tiled_client():
     os.environ["TILED_API_KEY"] = Secret.load(f"tiled-{LOCATION}-api-key").get()

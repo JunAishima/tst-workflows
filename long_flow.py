@@ -1,4 +1,3 @@
-import numpy as np
 from prefect import task, flow
 import time as ttime
 

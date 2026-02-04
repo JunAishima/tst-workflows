@@ -1,6 +1,7 @@
 from prefect import task, get_run_logger
 from utils import get_tiled_client
 
+
 @task
 def get_other_docs(uid):
     logger = get_run_logger()
