@@ -1,0 +1,13 @@
+[workspace]
+channels = ["conda-forge"]
+name = "prefect3 test"
+platforms = ["linux-64"]
+
+[dependencies]
+prefect = "3.*"
+python = "<3.14"
+tiled-client = ">=0.2.3"
+bluesky-tiled-plugins = ">=2"
+
+[pypi-dependencies]
+lixtools = "==2023.1.23.0"
