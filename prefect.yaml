@@ -6,13 +6,18 @@ build: null
 push: null
 
 pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: /repo
   - prefect.deployments.steps.git_clone:
       repository: https://github.com/nsls2/tst-workflows.git
-      branch: prefect3-pixi-upgrade
+      branch: main
 
 deployments:
   - name: tst-end-of-run-workflow-docker
-    version: 0.1.0
+    version: 0.1.1
+    tags:
+      - tst
+      - main
     description: Deploy the updated Docker image
     entrypoint: end_of_run_workflow.py:end_of_run_workflow
     parameters: {}
@@ -21,7 +26,8 @@ deployments:
       job_variables:
         env:
           TILED_SITE_PROFILES: /nsls2/software/etc/tiled/profiles
-        image: ghcr.io/nsls2/tst-workflows:prefect3-pixi-upgrade
+        image: ghcr.io/nsls2/tst-workflows:main
+        image_pull_policy: Always
         network_mode: slirp4netns
         userns: "keep-id:uid=402974,gid=402974"  # workflow-tst:workflow-tst
         volumes:
