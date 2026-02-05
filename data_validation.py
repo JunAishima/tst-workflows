@@ -12,7 +12,6 @@ def read_all_streams(uid, beamline_acronym):
     with open("/srv/tiled.secret", "r") as secrets:
         load_dotenv(stream=secrets)
     api_key = os.environ["TILED_API_KEY"]
-    logger.info(f"first 4 characters of key: {api_key[:4]}")
     cl = from_profile("nsls2", api_key=api_key)
     run = cl["tst"]["raw"][uid]
     logger.info(f"Validating uid {run.start['uid']}")
