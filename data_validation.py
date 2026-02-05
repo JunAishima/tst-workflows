@@ -1,5 +1,7 @@
+import os
+
+from dotenv import load_dotenv
 from prefect import task, flow, get_run_logger
-from prefect.blocks.system import Secret
 import time as ttime
 from tiled.client import from_profile
 
@@ -7,7 +9,10 @@ from tiled.client import from_profile
 @task(retries=2, retry_delay_seconds=10)
 def read_all_streams(uid, beamline_acronym):
     logger = get_run_logger()
-    api_key = Secret.load("tiled-tst-api-key").get()
+    with open("/srv/env.secrets", "r") as secrets:
+        load_dotenv(stream=secrets)
+    api_key = os.environ["TILED_API_KEY"]
+    logger.info(f"first 4 characters of key: {api_key[:4]}")
     cl = from_profile("nsls2", api_key=api_key)
     run = cl["tst"]["raw"][uid]
     logger.info(f"Validating uid {run.start['uid']}")
