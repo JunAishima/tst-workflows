@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from prefect import get_run_logger
 from tiled.client import from_profile
 
 import os
@@ -8,7 +7,6 @@ LOCATION = "tst"
 
 
 def get_tiled_client():
-    logger = get_run_logger()
     with open("/srv/tiled.secret", "r") as secrets:
         load_dotenv(stream=secrets)
     api_key = os.environ["TILED_API_KEY"]
