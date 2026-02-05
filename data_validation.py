@@ -9,7 +9,7 @@ from tiled.client import from_profile
 @task(retries=2, retry_delay_seconds=10)
 def read_all_streams(uid, beamline_acronym):
     logger = get_run_logger()
-    with open("/srv/env.secrets", "r") as secrets:
+    with open("/srv/env.secret", "r") as secrets:
         load_dotenv(stream=secrets)
     api_key = os.environ["TILED_API_KEY"]
     logger.info(f"first 4 characters of key: {api_key[:4]}")

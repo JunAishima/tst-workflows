@@ -33,6 +33,6 @@ deployments:
         volumes:
           - /nsls2/data/tst/proposals:/nsls2/data/tst/proposals
           - /nsls2/software/etc/tiled:/nsls2/software/etc/tiled
-          - /srv/prefect3-docker-worker-tst/env.secret:/srv/env.secret
+          - /srv/prefect3-docker-worker-tst:/srv
         auto_remove: true
       name: tst-work-pool-docker
