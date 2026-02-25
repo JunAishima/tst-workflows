@@ -89,3 +89,4 @@ def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     get_other_docs(uid, api_key=api_key)
     # long_flow(iterations=100, sleep_length=10, dry_run=dry_run)
     log_completion(dry_run=dry_run)
+    return True
