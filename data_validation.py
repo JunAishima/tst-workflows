@@ -1,17 +1,11 @@
-import os
-
-from dotenv import load_dotenv
 from prefect import task, flow, get_run_logger
 import time as ttime
 from tiled.client import from_profile
 
 
 @task(retries=2, retry_delay_seconds=10)
-def read_all_streams(uid, beamline_acronym):
+def read_all_streams(uid, beamline_acronym, api_key=None):
     logger = get_run_logger()
-    with open("/srv/tiled.secret", "r") as secrets:
-        load_dotenv(stream=secrets)
-    api_key = os.environ["TILED_API_KEY"]
     cl = from_profile("nsls2", api_key=api_key)
     run = cl["tst"]["raw"][uid]
     logger.info(f"Validating uid {run.start['uid']}")
@@ -28,5 +22,5 @@ def read_all_streams(uid, beamline_acronym):
 
 
 @flow
-def data_validation(uid):
-    read_all_streams(uid, beamline_acronym="tst")
+def data_validation(uid, api_key=None):
+    read_all_streams(uid, beamline_acronym="tst", api_key=api_key)
