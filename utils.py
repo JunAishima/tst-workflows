@@ -1,6 +1,5 @@
 from tiled.client import from_profile
 
-import os
 
 LOCATION = "tst"
 
