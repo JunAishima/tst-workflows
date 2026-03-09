@@ -1,12 +1,12 @@
 from prefect import task, flow, get_run_logger
 import time as ttime
-from tiled.client import from_profile
+from tiled.client import from_uri
 
 
 @task(retries=2, retry_delay_seconds=10)
 def read_all_streams(uid, beamline_acronym, api_key=None):
     logger = get_run_logger()
-    cl = from_profile("nsls2", api_key=api_key)
+    cl = from_uri("https://tiled.nsls2.bnl.gov", api_key=api_key)
     run = cl["tst"]["raw"][uid]
     logger.info(f"Validating uid {run.start['uid']}")
     start_time = ttime.monotonic()
