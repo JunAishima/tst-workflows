@@ -25,10 +25,11 @@ def log_completion(dry_run=False):
 
 
 @flow
-def end_of_run_workflow(stop_doc, dry_run=False):
+def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     uid = stop_doc["run_start"]
     # hello_world()
-    api_key = get_api_key_from_env(api_key=None)
+    if not api_key:
+        api_key = get_api_key_from_env(api_key=None)
     data_validation(uid, return_state=True, api_key=api_key, dry_run=dry_run)
     get_other_docs(uid, api_key=api_key, dry_run=dry_run)
     # long_flow(iterations=100, sleep_length=10, dry_run=dry_run)
