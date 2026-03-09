@@ -1,9 +1,10 @@
-from prefect import task, flow
+from prefect import task, flow, get_run_logger
 import time as ttime
 
 
 @task
 def print_and_sleep(iterations, sleep_length, dry_run=False):
+    logger = get_run_logger()
     # Long running task
     print("Long task...")
     if dry_run:
