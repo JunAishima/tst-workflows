@@ -4,8 +4,11 @@ from tiled.client import from_uri
 
 
 @task(retries=2, retry_delay_seconds=10)
-def read_all_streams(uid, beamline_acronym, api_key=None):
+def read_all_streams(uid, beamline_acronym, api_key=None, dry_run=False):
     logger = get_run_logger()
+    if dry_run:
+        logger.info("Dry run: not creating tiled client or checking streams")
+        return
     cl = from_uri("https://tiled.nsls2.bnl.gov", api_key=api_key)
     run = cl["tst"]["raw"][uid]
     logger.info(f"Validating uid {run.start['uid']}")
@@ -22,5 +25,5 @@ def read_all_streams(uid, beamline_acronym, api_key=None):
 
 
 @flow
-def data_validation(uid, api_key=None):
-    read_all_streams(uid, beamline_acronym="tst", api_key=api_key)
+def data_validation(uid, api_key=None, dry_run=False):
+    read_all_streams(uid, beamline_acronym="tst", api_key=api_key, dry_run=dry_run)
