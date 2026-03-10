@@ -1,4 +1,6 @@
 import traceback
+import os
+import sys
 
 from prefect import task, flow, get_run_logger
 from data_validation import data_validation, get_run, get_api_key_from_env
@@ -90,3 +92,9 @@ def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     # long_flow(iterations=100, sleep_length=10, dry_run=dry_run)
     log_completion(dry_run=dry_run)
     return True
+
+
+if __name__ == "__main__":
+    tiled_api_key = os.environ["TEST_TILED_API_KEY"]
+    stop_doc = sys.argv[1]
+    end_of_run_workflow(stop_doc, api_key=tiled_api_key)
