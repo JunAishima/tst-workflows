@@ -8,13 +8,9 @@ from dotenv import load_dotenv
 
 
 def get_api_key_from_env(api_key=None):
-    logger = get_run_logger()
-    try:
-        with open("/srv/container.secret", "r") as secrets:
-            load_dotenv(stream=secrets)
-        api_key = os.environ["TILED_API_KEY"]
-    except Exception:
-        logger.exception("Exception while getting Tiled API key")
+    with open("/srv/container.secret", "r") as secrets:
+        load_dotenv(stream=secrets)
+    api_key = os.environ["TILED_API_KEY"]
     return api_key
 
 
@@ -30,7 +26,7 @@ def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     # hello_world()
     if not api_key:
         api_key = get_api_key_from_env(api_key=None)
-    data_validation(uid, return_state=True, api_key=api_key, dry_run=dry_run)
-    get_other_docs(uid, api_key=api_key, dry_run=dry_run)
+    data_validation(uid, return_state=True, api_key=api_key)
+    get_other_docs(uid, api_key=api_key)
     # long_flow(iterations=100, sleep_length=10, dry_run=dry_run)
     log_completion(dry_run=dry_run)
