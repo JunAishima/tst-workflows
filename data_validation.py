@@ -10,8 +10,13 @@ def get_run(uid, api_key=None):
     return run
 
 
+@task
+def read_stream(run, stream):
+    return run[stream].read()
+
+
 @task(retries=2, retry_delay_seconds=10)
-def read_all_streams(uid, beamline_acronym, api_key=None):
+def read_all_streams(uid, api_key=None):
     logger = get_run_logger()
     run = get_run(uid, api_key=api_key)
     logger.info(f"Validating uid {run.start['uid']}")
@@ -19,7 +24,7 @@ def read_all_streams(uid, beamline_acronym, api_key=None):
     for stream in run:
         logger.info(f"{stream}:")
         stream_start_time = ttime.monotonic()
-        stream_data = run[stream].read()
+        stream_data = read_stream(run, stream)
         stream_elapsed_time = ttime.monotonic() - stream_start_time
         logger.info(f"{stream} elapsed_time = {stream_elapsed_time}")
         logger.info(f"{stream} nbytes = {stream_data.nbytes:_}")
@@ -29,4 +34,4 @@ def read_all_streams(uid, beamline_acronym, api_key=None):
 
 @flow
 def data_validation(uid, api_key=None, dry_run=False):
-    read_all_streams(uid, beamline_acronym="tst", api_key=api_key)
+    read_all_streams(uid, api_key=api_key)
