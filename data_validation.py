@@ -1,10 +1,13 @@
 from prefect import task, flow, get_run_logger
 import time as ttime
 from tiled.client import from_uri
+from end_of_run_workflow import get_api_key_from_env
 
 
 @task
 def get_run(uid, api_key=None):
+    if not api_key:
+        api_key = get_api_key_from_env()
     cl = from_uri("https://tiled.nsls2.bnl.gov", api_key=api_key)
     run = cl["tst/raw"][uid]
     return run
