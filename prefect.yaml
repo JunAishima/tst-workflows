@@ -10,7 +10,7 @@ pull:
       directory: /repo
   - prefect.deployments.steps.git_clone:
       repository: https://github.com/junaishima/tst-workflows.git
-      branch: update-dotenv
+      branch: fix-pass-api-key
 
 deployments:
   - name: tst-end-of-run-workflow-docker
@@ -24,7 +24,7 @@ deployments:
     schedule: {}
     work_pool:
       job_variables:
-        image: ghcr.io/junaishima/tst-workflows:update-dotenv
+        image: ghcr.io/junaishima/tst-workflows:fix-pass-api-key
         image_pull_policy: Always
         network_mode: slirp4netns
         userns: "keep-id:uid=402974,gid=402974" # workflow-tst:workflow-tst
