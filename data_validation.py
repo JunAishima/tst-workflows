@@ -1,7 +1,15 @@
+import os
 from prefect import task, flow, get_run_logger
 import time as ttime
 from tiled.client import from_uri
-from end_of_run_workflow import get_api_key_from_env
+from dotenv import load_dotenv
+
+
+def get_api_key_from_env(api_key=None):
+    with open("/srv/container.secret", "r") as secrets:
+        load_dotenv(stream=secrets)
+    api_key = os.environ["TILED_API_KEY"]
+    return api_key
 
 
 @task

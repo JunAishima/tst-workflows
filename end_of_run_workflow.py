@@ -3,15 +3,7 @@ import os
 from prefect import task, flow, get_run_logger
 from data_validation import data_validation
 from test_extra_client import get_other_docs
-from dotenv import load_dotenv
 # from long_flow import long_flow
-
-
-def get_api_key_from_env(api_key=None):
-    with open("/srv/container.secret", "r") as secrets:
-        load_dotenv(stream=secrets)
-    api_key = os.environ["TILED_API_KEY"]
-    return api_key
 
 
 @task
