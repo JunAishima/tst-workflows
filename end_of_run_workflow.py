@@ -1,5 +1,3 @@
-import os
-
 from prefect import task, flow, get_run_logger
 from data_validation import data_validation
 from test_extra_client import get_other_docs
