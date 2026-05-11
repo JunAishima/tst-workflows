@@ -2,6 +2,8 @@ from prefect import task, flow, get_run_logger
 from data_validation import data_validation
 from test_extra_client import get_other_docs
 # from long_flow import long_flow
+from prefect.runtime import flow_run
+from prefect.settings import PREFECT_UI_URL
 
 
 @task
@@ -10,9 +12,11 @@ def log_completion(dry_run=False):
     logger.info(f"Complete! Dry run = {dry_run}")
 
 
-@flow
+@flow(log_prints=True)
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     uid = stop_doc["run_start"]
+    ui_url = PREFECT_UI_URL.value()
+    print(f"{ui_url}/flow-runs/flow-run/{flow_run.id}")
     # hello_world()
     data_validation(uid, return_state=True, api_key=api_key)
     get_other_docs(uid, api_key=api_key)
