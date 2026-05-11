@@ -4,7 +4,7 @@ from prefect import task, flow, get_run_logger
 from prefect.blocks.notifications import SlackWebhook
 from prefect.context import FlowRunContext
 from prefect.settings import PREFECT_UI_URL
-from data_validation import data_validation
+from data_validation import data_validation, get_api_key_from_env, get_run
 from test_extra_client import get_other_docs
 
 # from long_flow import long_flow
@@ -60,8 +60,10 @@ def slack(func):
             )
             flow_run = FlowRunContext.get().flow_run
             logger.info(flow_run.id)
-            group_message = f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/" + \
-                            f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            group_message = (
+                f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
+                + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            )
             logger.info(group_message)
             mon_prefect_tst.notify(group_message)
 
@@ -77,8 +79,10 @@ def slack(func):
                 f":bangbang: {CATALOG_NAME} flow-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
             )
             flow_run = FlowRunContext.get().flow_run
-            group_message = f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/" + \
-                            f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            group_message = (
+                f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
+                + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            )
             mon_prefect_tst.notify(group_message)
 
             raise
