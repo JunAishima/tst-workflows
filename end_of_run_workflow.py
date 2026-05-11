@@ -51,6 +51,7 @@ def slack(func):
             )
 
         try:
+            logger.info("before running workflow")
             result = func(stop_doc, api_key=api_key, dry_run=dry_run)
 
             # Send a message to mon-prefect if flow-run is successful.
@@ -58,6 +59,7 @@ def slack(func):
                 f":white_check_mark: {CATALOG_NAME} flow-run successful. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
             )
             flow_run = FlowRunContext.get().flow_run
+            logger.info(flow_run.id)
             group_message = f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/" + \
                             f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
             logger.info(group_message)
