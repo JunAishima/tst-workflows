@@ -14,6 +14,7 @@ def log_completion(dry_run=False):
 
 @flow
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
+    logger = get_run_logger()
     uid = stop_doc["run_start"]
     ui_url = PREFECT_UI_URL.value()
     logger.info(f"{ui_url}/flow-runs/flow-run/{flow_run.id}")
