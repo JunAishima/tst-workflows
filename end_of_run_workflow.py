@@ -12,11 +12,11 @@ def log_completion(dry_run=False):
     logger.info(f"Complete! Dry run = {dry_run}")
 
 
-@flow(log_prints=True)
+@flow
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     uid = stop_doc["run_start"]
     ui_url = PREFECT_UI_URL.value()
-    print(f"{ui_url}/flow-runs/flow-run/{flow_run.id}")
+    logger.info(f"{ui_url}/flow-runs/flow-run/{flow_run.id}")
     # hello_world()
     data_validation(uid, return_state=True, api_key=api_key)
     get_other_docs(uid, api_key=api_key)
