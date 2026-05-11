@@ -25,6 +25,7 @@ def slack(func):
     """
 
     def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
+        logger = get_run_logger()
         flow_run_name = FlowRunContext.get().flow_run.dict().get("name")
 
         # Load slack credentials that are saved in Prefect.
@@ -59,6 +60,7 @@ def slack(func):
             flow_run = FlowRunContext.get().flow_run
             group_message = f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/" + \
                             f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            logger.info(group_message)
             mon_prefect_tst.notify(group_message)
 
             return result
