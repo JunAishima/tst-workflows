@@ -80,7 +80,7 @@ def slack(func):
             )
             flow_run = FlowRunContext.get().flow_run
             group_message = (
-                f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
+                f":bangbang: {CATALOG_NAME} flow-run failed. <{PREFECT_UI_URL.value()}/flow-runs/"
                 + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
             )
             mon_prefect_tst.notify(group_message)
@@ -112,6 +112,8 @@ def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
         + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
     )
     logger.info(group_message)
+    mon_prefect_tst = SlackWebhook.load("mon-prefect-test2")
+    mon_prefect_tst.notify(group_message)
 
     data_validation(uid, return_state=True, api_key=api_key)
     get_other_docs(uid, api_key=api_key)
