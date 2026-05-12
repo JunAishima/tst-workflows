@@ -96,8 +96,9 @@ def log_completion(dry_run=False):
     logger.info(f"Complete! Dry run = {dry_run}")
 
 
-@flow(log_prints=True)
+@flow
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
+    logger = get_run_logger()
     uid = stop_doc["run_start"]
     # hello_world()
     flow_run_name = FlowRunContext.get().flow_run.dict().get("name")
@@ -105,12 +106,12 @@ def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     run = get_run(uid, api_key=api_key)
     scan_id = run.start["scan_id"]
 
-    print(flow_run.id)
+    logger.info(flow_run.id)
     group_message = (
-        f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
+        f":bangbang: {CATALOG_NAME} flow-run failed. <{PREFECT_UI_URL.value()}/flow-runs/"
         + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
     )
-    print(group_message)
+    logger.info(group_message)
 
     data_validation(uid, return_state=True, api_key=api_key)
     get_other_docs(uid, api_key=api_key)
