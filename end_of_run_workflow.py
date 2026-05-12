@@ -44,7 +44,7 @@ def slack(func):
         scan_id = run.start["scan_id"]
 
         # Send a message to mon-bluesky if bluesky-run failed.
-        if stop_doc.get("exit_status") == "fail":
+#        if stop_doc.get("exit_status") == "fail":
 #            mon_bluesky.notify(
 #                f":bangbang: {CATALOG_NAME} bluesky-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```reason: {stop_doc.get('reason', 'none')}```"
 #            )
