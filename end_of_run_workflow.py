@@ -100,6 +100,7 @@ def log_completion(dry_run=False):
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     uid = stop_doc["run_start"]
     # hello_world()
+    flow_run_name = FlowRunContext.get().flow_run.dict().get("name")
     flow_run = FlowRunContext.get().flow_run
     print(flow_run.id)
     group_message = (
