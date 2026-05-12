@@ -25,13 +25,12 @@ def slack(func):
     """
 
     def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
-        logger = get_run_logger()
         flow_run_name = FlowRunContext.get().flow_run.dict().get("name")
 
         # Load slack credentials that are saved in Prefect.
         mon_prefect = SlackWebhook.load("mon-prefect-test")
         mon_prefect_tst = SlackWebhook.load("mon-prefect-test2")
-        mon_bluesky = SlackWebhook.load("mon-bluesky")
+#        mon_bluesky = SlackWebhook.load("mon-bluesky")
 
         # Get the uid.
         uid = stop_doc["run_start"]
@@ -46,12 +45,11 @@ def slack(func):
 
         # Send a message to mon-bluesky if bluesky-run failed.
         if stop_doc.get("exit_status") == "fail":
-            mon_bluesky.notify(
-                f":bangbang: {CATALOG_NAME} bluesky-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```reason: {stop_doc.get('reason', 'none')}```"
-            )
+#            mon_bluesky.notify(
+#                f":bangbang: {CATALOG_NAME} bluesky-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```reason: {stop_doc.get('reason', 'none')}```"
+#            )
 
         try:
-            print("before running workflow")
             result = func(stop_doc, api_key=api_key, dry_run=dry_run)
 
             # Send a message to mon-prefect if flow-run is successful.
@@ -59,12 +57,10 @@ def slack(func):
                 f":white_check_mark: {CATALOG_NAME} flow-run successful. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
             )
             flow_run = FlowRunContext.get().flow_run
-            print(flow_run.id)
             group_message = (
                 f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
                 + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
             )
-            logger.info(group_message)
             mon_prefect_tst.notify(group_message)
 
             return result
