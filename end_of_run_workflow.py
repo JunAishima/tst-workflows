@@ -96,7 +96,7 @@ def log_completion(dry_run=False):
     logger.info(f"Complete! Dry run = {dry_run}")
 
 
-@flow
+@flow(log_prints=True)
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     uid = stop_doc["run_start"]
     # hello_world()
