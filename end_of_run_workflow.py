@@ -102,6 +102,9 @@ def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     # hello_world()
     flow_run_name = FlowRunContext.get().flow_run.dict().get("name")
     flow_run = FlowRunContext.get().flow_run
+    run = get_run(uid, api_key=api_key)
+    scan_id = run.start["scan_id"]
+
     print(flow_run.id)
     group_message = (
         f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
