@@ -6,7 +6,10 @@ from test_extra_client import get_other_docs
 from prefect.context import FlowRunContext
 from prefect.settings import PREFECT_UI_URL
 from prefect.blocks.notifications import SlackWebhook
+
 # from long_flow import long_flow
+
+CATALOG_NAME = "tst"
 
 
 def slack(func):
@@ -44,6 +47,7 @@ def slack(func):
         if stop_doc.get("exit_status") == "fail":
             mon_bluesky.notify(
                 f":bangbang: {CATALOG_NAME} bluesky-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```reason: {stop_doc.get('reason', 'none')}```"
+            )
         try:
             result = func(stop_doc, api_key=api_key, dry_run=dry_run)
 
@@ -72,6 +76,7 @@ def slack(func):
             raise
 
     return end_of_run_workflow
+
 
 @task
 def log_completion(dry_run=False):
