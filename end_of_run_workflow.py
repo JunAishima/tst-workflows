@@ -51,7 +51,7 @@ def slack(func):
             )
 
         try:
-            logger.info("before running workflow")
+            print("before running workflow")
             result = func(stop_doc, api_key=api_key, dry_run=dry_run)
 
             # Send a message to mon-prefect if flow-run is successful.
@@ -59,7 +59,7 @@ def slack(func):
                 f":white_check_mark: {CATALOG_NAME} flow-run successful. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
             )
             flow_run = FlowRunContext.get().flow_run
-            logger.info(flow_run.id)
+            print(flow_run.id)
             group_message = (
                 f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
                 + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
@@ -100,6 +100,14 @@ def log_completion(dry_run=False):
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     uid = stop_doc["run_start"]
     # hello_world()
+    flow_run = FlowRunContext.get().flow_run
+    print(flow_run.id)
+    group_message = (
+        f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
+        + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
+    )
+    print(group_message)
+
     data_validation(uid, return_state=True, api_key=api_key)
     get_other_docs(uid, api_key=api_key)
     # long_flow(iterations=100, sleep_length=10, dry_run=dry_run)
