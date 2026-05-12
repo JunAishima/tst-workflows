@@ -50,7 +50,7 @@ def slack(func):
 #            )
 
         try:
-            #result = func(stop_doc, api_key=api_key, dry_run=dry_run)
+            result = func(stop_doc, api_key=api_key, dry_run=dry_run)
 
             # Send a message to mon-prefect if flow-run is successful.
             mon_prefect_tst.notify(
@@ -93,6 +93,7 @@ def log_completion(dry_run=False):
 
 
 @flow
+@slack
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     logger = get_run_logger()
     uid = stop_doc["run_start"]
@@ -107,9 +108,9 @@ def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
         f":bangbang: {CATALOG_NAME} flow-run failed. <{PREFECT_UI_URL.value()}/flow-runs/"
         + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
     )
-    logger.info(group_message)
-    mon_prefect_tst = SlackWebhook.load("mon-prefect-test2")
-    mon_prefect_tst.notify(group_message)
+#    logger.info(group_message)
+#    mon_prefect_tst = SlackWebhook.load("mon-prefect-test2")
+#    mon_prefect_tst.notify(group_message)
 
     data_validation(uid, return_state=True, api_key=api_key)
     get_other_docs(uid, api_key=api_key)
