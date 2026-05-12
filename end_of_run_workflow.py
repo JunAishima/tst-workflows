@@ -6,12 +6,13 @@ from prefect.settings import PREFECT_UI_URL
 from prefect.blocks.notifications import SlackWebhook
 # from long_flow import long_flow
 
+
 def slack(func):
     """
-    Send a message to mon-prefect-tst slack channel about the flow-run status.
+    Send a message to mon-prefect-tst slack channel about the flow-run status (pass or fail).
     Send a message to mon-prefect slack channel if the flow-run failed.
     Send a message to mon-bluesky slack channel if the bluesky-run failed.
-    Skip sending a message to mon-prefect-gr slack channel because it is not part of a group.
+    Skip sending a message to mon-prefect-<group> slack channel because it is not part of a group.
 
     NOTE: the name of this inner function is the same as the real end_of_workflow() function because
     when the decorator is used, Prefect sees the name of this inner function as the name of
@@ -22,8 +23,8 @@ def slack(func):
         flow_run_name = FlowRunContext.get().flow_run.dict().get("name")
 
         # Load slack credentials that are saved in Prefect.
-        mon_prefect = SlackWebhook.load("mon-prefect-test")
-        mon_prefect_tst = SlackWebhook.load("mon-prefect-test2")
+        mon_prefect = SlackWebhook.load("mon-prefect")
+        mon_prefect_tst = SlackWebhook.load("mon-prefect-tst")
         mon_bluesky = SlackWebhook.load("mon-bluesky")
 
         # Get the uid.
@@ -44,34 +45,27 @@ def slack(func):
         try:
             result = func(stop_doc, api_key=api_key, dry_run=dry_run)
 
-            # Send a message to mon-prefect if flow-run is successful.
+            # Send a message to mon-prefect-tst if flow-run is successful.
             mon_prefect_tst.notify(
                 f":white_check_mark: {CATALOG_NAME} flow-run successful. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
             )
             flow_run = FlowRunContext.get().flow_run
-            group_message = (
-                f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
-                + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
-            )
-            mon_prefect_tst.notify(group_message)
 
             return result
         except Exception as e:
             tb = traceback.format_exception_only(e)
 
-            # Send a message to mon-prefect if flow-run failed.
-            mon_prefect_tst.notify(
-                f":bangbang: {CATALOG_NAME} flow-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
-            )
-            mon_prefect.notify(
-                f":bangbang: {CATALOG_NAME} flow-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
-            )
+            # Send a message to mon-prefect and mon-prefect-tst if flow-run failed.
+            message = f":bangbang: {CATALOG_NAME} flow-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            mon_prefect_tst.notify(message)
+            mon_prefect.notify(message)
             flow_run = FlowRunContext.get().flow_run
+
+            # Send a message to mon-prefect-<group> if flow-run failed. Add link to flow-run
             group_message = (
                 f":bangbang: {CATALOG_NAME} flow-run failed. <{PREFECT_UI_URL.value()}/flow-runs/"
                 + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
             )
-            mon_prefect_tst.notify(group_message)
 
             raise
 
