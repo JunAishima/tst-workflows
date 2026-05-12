@@ -59,7 +59,7 @@ def slack(func):
             flow_run = FlowRunContext.get().flow_run
             group_message = (
                 f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
-                + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+                + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
             )
             mon_prefect_tst.notify(group_message)
 
