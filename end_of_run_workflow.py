@@ -50,7 +50,7 @@ def slack(func):
 #            )
 
         try:
-            result = func(stop_doc, api_key=api_key, dry_run=dry_run)
+            #result = func(stop_doc, api_key=api_key, dry_run=dry_run)
 
             # Send a message to mon-prefect if flow-run is successful.
             mon_prefect_tst.notify(
