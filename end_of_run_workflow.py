@@ -1,6 +1,9 @@
 from prefect import task, flow, get_run_logger
-from data_validation import data_validation
+from data_validation import data_validation, get_run, get_api_key_from_env
 from test_extra_client import get_other_docs
+from prefect.context import FlowRunContext
+from prefect.settings import PREFECT_UI_URL
+from prefect.blocks.notifications import SlackWebhook
 # from long_flow import long_flow
 
 def slack(func):
@@ -38,6 +41,41 @@ def slack(func):
         if stop_doc.get("exit_status") == "fail":
             mon_bluesky.notify(
                 f":bangbang: {CATALOG_NAME} bluesky-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```reason: {stop_doc.get('reason', 'none')}```"
+        try:
+            result = func(stop_doc, api_key=api_key, dry_run=dry_run)
+
+            # Send a message to mon-prefect if flow-run is successful.
+            mon_prefect_tst.notify(
+                f":white_check_mark: {CATALOG_NAME} flow-run successful. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
+            )
+            flow_run = FlowRunContext.get().flow_run
+            group_message = (
+                f":bangbang: {CATALOG_NAME} flow-run failed. <https://{PREFECT_UI_URL.value()}/flow-runs/"
+                + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}```"
+            )
+            mon_prefect_tst.notify(group_message)
+
+            return result
+        except Exception as e:
+            tb = traceback.format_exception_only(e)
+
+            # Send a message to mon-prefect if flow-run failed.
+            mon_prefect_tst.notify(
+                f":bangbang: {CATALOG_NAME} flow-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            )
+            mon_prefect.notify(
+                f":bangbang: {CATALOG_NAME} flow-run failed. (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            )
+            flow_run = FlowRunContext.get().flow_run
+            group_message = (
+                f":bangbang: {CATALOG_NAME} flow-run failed. <{PREFECT_UI_URL.value()}/flow-runs/"
+                + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
+            )
+            mon_prefect_tst.notify(group_message)
+
+            raise
+
+    return end_of_run_workflow
 
 @task
 def log_completion(dry_run=False):
