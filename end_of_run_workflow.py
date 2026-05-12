@@ -1,3 +1,5 @@
+import traceback
+
 from prefect import task, flow, get_run_logger
 from data_validation import data_validation, get_run, get_api_key_from_env
 from test_extra_client import get_other_docs
