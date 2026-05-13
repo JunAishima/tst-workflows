@@ -83,12 +83,55 @@ def log_completion(dry_run=False):
     logger = get_run_logger()
     logger.info(f"Complete! Dry run = {dry_run}")
 
+@task
+def test_all_channels():
+    mon_prefect = SlackWebhook.load("mon-prefect")
+    mon_prefect_cms = SlackWebhook.load("mon-prefect-cms")
+    mon_prefect_chx = SlackWebhook.load("mon-prefect-chx")
+    mon_prefect_smi = SlackWebhook.load("mon-prefect-smi")
+    mon_prefect_cs = SlackWebhook.load("mon-prefect-cs")
+
+    mon_prefect_arpes = SlackWebhook.load("mon-prefect-arpes")
+    mon_prefect_est = SlackWebhook.load("mon-prefect-est")
+
+    mon_prefect_srx = SlackWebhook.load("mon-prefect-srx")
+    mon_prefect_cdi = SlackWebhook.load("mon-prefect-cdi")
+    mon_prefect_fxi = SlackWebhook.load("mon-prefect-fxi")
+    mon_prefect_im = SlackWebhook.load("mon-prefect-im")
+
+    mon_prefect_haxpes = SlackWebhook.load("mon-prefect-haxpes")
+    mon_prefect_rsoxs = SlackWebhook.load("mon-prefect-rsoxs")
+    mon_prefect_qas = SlackWebhook.load("mon-prefect-qas")
+    mon_prefect_spec = SlackWebhook.load("mon-prefect-spec")
+    mon_bluesky = SlackWebhook.load("mon-bluesky")
+
+    mon_prefect.notify("mon-prefect")
+    mon_prefect_cms.notify("mon-prefect-cms")
+    mon_prefect_chx.notify("mon-prefect-chx")
+    mon_prefect_smi.notify("mon-prefect-smi")
+    mon_prefect_cs.notify("mon-prefect-cs")
+
+    mon_prefect_arpes.notify("mon-prefect-arpes")
+    mon_prefect_est.notify("mon-prefect-est")
+
+    mon_prefect_srx.notify("mon-prefect-srx")
+    mon_prefect_cdi.notify("mon-prefect-cdi")
+    mon_prefect_fxi.notify("mon-prefect-fxi")
+    mon_prefect_im.notify("mon-prefect-im")
+
+    mon_prefect_haxpes.load("mon-prefect-haxpes")
+    mon_prefect_rsoxs.notify("mon-prefect-rsoxs")
+    mon_prefect_qas.notify("mon-prefect-qas")
+    mon_prefect_spec.notify("mon-prefect-spec")
+
+
 
 @flow
 @slack
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     uid = stop_doc["run_start"]
     # hello_world()
+    test_all_channels()
     data_validation(uid, return_state=True, api_key=api_key)
     get_other_docs(uid, api_key=api_key)
     # long_flow(iterations=100, sleep_length=10, dry_run=dry_run)
