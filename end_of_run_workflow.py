@@ -88,11 +88,15 @@ def test_all_channels():
     mon_prefect = SlackWebhook.load("mon-prefect")
     mon_prefect_cms = SlackWebhook.load("mon-prefect-cms")
     mon_prefect_chx = SlackWebhook.load("mon-prefect-chx")
+    mon_prefect_opls = SlackWebhook.load("mon-prefect-opls")
     mon_prefect_smi = SlackWebhook.load("mon-prefect-smi")
     mon_prefect_cs = SlackWebhook.load("mon-prefect-cs")
 
     mon_prefect_arpes = SlackWebhook.load("mon-prefect-arpes")
     mon_prefect_est = SlackWebhook.load("mon-prefect-est")
+
+    mon_prefect_hex = SlackWebhook.load("mon-prefect-hex")
+    mon_prefect_hxm = SlackWebhook.load("mon-prefect-hxm")
 
     mon_prefect_srx = SlackWebhook.load("mon-prefect-srx")
     mon_prefect_cdi = SlackWebhook.load("mon-prefect-cdi")
@@ -108,18 +112,22 @@ def test_all_channels():
     mon_prefect.notify("mon-prefect")
     mon_prefect_cms.notify("mon-prefect-cms")
     mon_prefect_chx.notify("mon-prefect-chx")
+    mon_prefect_opls.notify("mon-prefect-opls")
     mon_prefect_smi.notify("mon-prefect-smi")
     mon_prefect_cs.notify("mon-prefect-cs")
 
     mon_prefect_arpes.notify("mon-prefect-arpes")
     mon_prefect_est.notify("mon-prefect-est")
 
+    mon_prefect_hex.notify("mon-prefect-hex")
+    mon_prefect_hxm.notify("mon-prefect-hxm")
+
     mon_prefect_srx.notify("mon-prefect-srx")
     mon_prefect_cdi.notify("mon-prefect-cdi")
     mon_prefect_fxi.notify("mon-prefect-fxi")
     mon_prefect_im.notify("mon-prefect-im")
 
-    mon_prefect_haxpes.load("mon-prefect-haxpes")
+    mon_prefect_haxpes.notify("mon-prefect-haxpes")
     mon_prefect_rsoxs.notify("mon-prefect-rsoxs")
     mon_prefect_qas.notify("mon-prefect-qas")
     mon_prefect_spec.notify("mon-prefect-spec")
