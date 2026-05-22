@@ -17,7 +17,7 @@ def slack(func):
     Send a message to mon-prefect-tst slack channel about the flow-run status (pass or fail).
     Send a message to mon-prefect slack channel if the flow-run failed.
     Send a message to mon-bluesky slack channel if the bluesky-run failed.
-    Skip sending a message to mon-prefect-<group> slack channel because it is not part of a group.
+    Skip sending a message to mon-prefect-program slack channel because it is not part of a group.
 
     NOTE: the name of this inner function is the same as the real end_of_workflow() function because
     when the decorator is used, Prefect sees the name of this inner function as the name of
@@ -63,7 +63,7 @@ def slack(func):
             mon_prefect.notify(message)
             flow_run = FlowRunContext.get().flow_run
 
-            # Send a message to mon-prefect-<group> if flow-run failed. Add link to flow-run
+            # Send a message to mon-prefect-program if flow-run failed. Add link to flow-run
             group_message = (
                 f":bangbang: {CATALOG_NAME} flow-run failed. <{PREFECT_UI_URL.value()}/flow-runs/"
                 + f"flow-run/{flow_run.id}|the flow run link> (*{flow_run_name}*)\n ```run_start: {uid}\nscan_id: {scan_id}``` ```{tb[-1]}```"
