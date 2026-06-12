@@ -32,7 +32,7 @@ def read_all_streams(uid, api_key=None):
     run = get_run(uid, api_key=api_key)
     logger.info(f"Validating uid {run.start['uid']}")
     start_time = ttime.monotonic()
-    print(f"Tiled retry attempts: {os.environ['TILED_RETRY_ATTEMPTS']}")
+    logger.info(f"Tiled retry attempts: {os.environ['TILED_RETRY_ATTEMPTS']}")
     for stream in run:
         logger.info(f"{stream}:")
         stream_start_time = ttime.monotonic()
