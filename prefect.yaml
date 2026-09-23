@@ -30,6 +30,6 @@ deployments:
         userns: "keep-id:uid=402974,gid=402974" # workflow-tst:workflow-tst
         volumes:
           - /nsls2/data/tst/proposals:/nsls2/data/tst/proposals
-          - /srv/prefect3-docker-worker-tst/app:/srv
+          - /srv/prefect3-docker-worker-tst/app/container.secret:/srv/container.secret:ro
         auto_remove: true
       name: tst-work-pool-docker
