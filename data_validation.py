@@ -1,7 +1,7 @@
 import os
 import time as ttime
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 from prefect import flow, get_run_logger, task
 from tiled.client import from_uri
 
@@ -9,9 +9,8 @@ BEAMLINE_OR_ENDSTATION = "tst"
 
 
 def get_api_key_from_env():
-    with open("/srv/container.secret", "r") as secrets:
-        load_dotenv(stream=secrets)
-    return os.environ["TILED_API_KEY"]
+    config = dotenv_values("/srv/container.secret")
+    return config.get("TILED_API_KEY")
 
 
 # Mongo database-backed - remove if this does not exist on the beamline
