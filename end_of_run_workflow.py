@@ -62,7 +62,7 @@ def log_completion(dry_run=False):
 @slack
 def end_of_run_workflow(stop_doc, api_key=None, dry_run=False):
     uid = stop_doc["run_start"]
-    data_validation(uid, api_key=api_key, dry_run=dry_run)
+    data_validation(uid, api_key=api_key)
     get_other_docs(uid, api_key=api_key)
     # long_flow(iterations=100, sleep_length=10)  # keep in to potentially run as a test in the future
     log_completion(dry_run=dry_run)

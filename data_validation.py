@@ -29,7 +29,7 @@ def read_stream(run, stream):
 
 
 @flow
-def data_validation(uid, api_key=None, dry_run=False):
+def data_validation(uid, api_key=None):
     logger = get_run_logger()
     logger.info(f"Validating uid {uid}")
     start_time = ttime.monotonic()
